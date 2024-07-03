@@ -1,13 +1,14 @@
 import re
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-import streamlit as st
+import requests
 from io import StringIO
 analyzer = SentimentIntensityAnalyzer()
 
 
-def sentimenter(file):
-    stringio = StringIO(file.getvalue().decode("utf-8"))
-    if stringio:
+def sentimenter(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        stringio = StringIO(response.text)
         text = stringio.read()
         breakdown = analyzer.polarity_scores(text)
         if breakdown["pos"] > breakdown["neg"]:
